@@ -1,14 +1,12 @@
-use std::io::stdin;
 use std::process::{ Command, Stdio, Child };
-use std::io::stdout;
-use std::io::Write;
+use std::io::{ stdout, stdin, Write };
 use std::path::Path;
 use std::env;
 
 fn main() {
     loop {
-        print!("> ");
-        stdout().flush();
+        print!("$ ");
+        stdout().flush().ok();
 
         let mut input = String::new();
         stdin().read_line(&mut input).unwrap();
@@ -48,7 +46,7 @@ fn main() {
                         Stdio::inherit()
                     };
 
-                    let mut output = Command::new(command)
+                    let output = Command::new(command)
                         .args(args)
                         .stdin(stdin)
                         .stdout(stdout)
@@ -66,7 +64,7 @@ fn main() {
         }
 
         if let Some(mut final_command) = previous_command {
-            final_command.wait();
+            final_command.wait().ok();
         }
     }
 }
