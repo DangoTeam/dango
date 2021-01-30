@@ -1,4 +1,6 @@
-![rshell](https://cdn.discordapp.com/attachments/655556944584638471/805129793574141972/rShell.png)
+<p align="center">
+  <img src="https://github.com/shaundeveloper/rShell/blob/main/rShell.png?raw=true" alt="rShell"/>
+</p>
 
 # rShell based on Rust!
 
