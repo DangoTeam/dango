@@ -54,9 +54,9 @@ fn main() {
     
                     match output {
                         Ok(output) => { previous_command = Some(output); },
-                        Err(e) => {
+                        Err(_e) => {
                             previous_command = None;
-                            eprintln!("{}", e);
+                            eprintln!("dango: command not found: {}", command);
                         },
                     };
                 }
