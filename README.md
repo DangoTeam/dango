@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/shaundeveloper/rShell/blob/main/rShell.png?raw=true" alt="rShell"/>
+  <img src="https://github.com/shaundeveloper/rShell/blob/main/dango.svg?raw=true" width="250" height="250" alt="dango"/>
 </p>
 
 # rShell based on Rust!
