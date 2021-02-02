@@ -16,6 +16,6 @@ It will be updated, added new features and plugins, refactored and optimized.
 ```cargo run ```
 
 # TODO:
-- [] Fix the Home and End keys.
-- [] The arrows work, and show the previous commands.
-- [] The user appears, and the current directory.
+- [ ] Fix the Home and End keys.
+- [ ] The arrows work, and show the previous commands.
+- [ ] The user appears, and the current directory.
