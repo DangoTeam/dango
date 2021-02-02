@@ -21,7 +21,7 @@ fn main() {
 
             match command {
                 "cd" => {
-                    let new_dir = args.next().unwrap_or_else("/");
+                    let new_dir = args.next().unwrap_or_else(|| "/");
                     let root = Path::new(new_dir);
                     if let Err(e) = env::set_current_dir(&root) {
                         eprintln!("{}", e);
