@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/shaundeveloper/rShell/blob/main/dango.svg?raw=true" width="250" height="250" alt="dango"/>
+  <img src="https://github.com/shaundeveloper/dango/blob/main/dango.svg?raw=true" width="250" height="250" alt="dango"/>
   <h1 align="center">Dango</h1>
 </p>
 
@@ -11,7 +11,7 @@ It will be updated, added new features and plugins, refactored and optimized.
 
 # Installation
 
-  ```git clone https://github.com/shaundeveloper/rShell.git```
+  ```git clone https://github.com/shaundeveloper/dango.git```
 
 ```cargo run ```
 
