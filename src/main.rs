@@ -1,19 +1,18 @@
-use std::{env, fs};
-use std::io::{stdin, stdout, Write};
+use std::io::{stdin, Write, stdout};
+use std::process::{ Command, Stdio, Child };
 use std::path::Path;
-use std::process::{Child, Command, Stdio};
-use users::{get_current_uid, get_user_by_uid};
+use std::env;
+use users::{get_current_uid, get_user_by_uid}; 
 
 fn main() {
-    let mut input = String::new();
-    let user = get_user_by_uid(get_current_uid()).unwrap();
-    let hostname = fs::read_to_string("/etc/hostname").unwrap();
 
-
+    let user = get_user_by_uid(get_current_uid()).unwrap(); 
+    
     loop {
-        print!("{}@{} ~ ", user.name().to_string_lossy(), hostname);
+        print!("{} ~ ", user.name().to_string_lossy());
         stdout().flush().ok();
 
+        let mut input = String::new();
         stdin().read_line(&mut input).unwrap();
 
         let mut commands = input.trim().split(" | ").peekable();
@@ -25,21 +24,23 @@ fn main() {
 
             match command {
                 "cd" => {
-                    let new_dir = args.next().unwrap_or_else(|| "/");
+                    let new_dir = args.next().unwrap_or("/");
                     let root = Path::new(new_dir);
                     if let Err(_e) = env::set_current_dir(&root) {
                         eprintln!("cd: no such file or directory: {}", new_dir);
                     }
 
                     previous_command = None;
-                }
+                },
 
                 "exit" => return,
 
                 command => {
-                    let stdin = previous_command.map_or(Stdio::inherit(), |output: Child| {
-                        Stdio::from(output.stdout.unwrap())
-                    });
+                    let stdin = previous_command
+                        .map_or(
+                            Stdio::inherit(),
+                            |output: Child| Stdio::from(output.stdout.unwrap())
+                        );
 
                     let stdout = if commands.peek().is_some() {
                         Stdio::piped()
@@ -54,13 +55,11 @@ fn main() {
                         .spawn();
 
                     match output {
-                        Ok(output) => {
-                            previous_command = Some(output);
-                        }
+                        Ok(output) => { previous_command = Some(output); },
                         Err(_e) => {
                             previous_command = None;
                             eprintln!("dango: command not found: {}", command);
-                        }
+                        },
                     };
                 }
             }

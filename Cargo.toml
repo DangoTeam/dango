@@ -8,4 +8,3 @@ edition = "2018"
 
 [dependencies]
 users = "0.11.0"
-hostname = "0.3.1"
