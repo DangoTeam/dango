@@ -18,4 +18,4 @@ It will be updated, added new features and plugins, refactored and optimized.
 # TODO:
 - [ ] Fix the Home and End keys.
 - [ ] The arrows work, and show the previous commands.
-- [ ] The user appears, and the current directory.
+- [x] The user appears, and the current directory.

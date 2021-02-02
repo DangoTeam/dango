@@ -1,13 +1,17 @@
-use std::env;
+use std::{env, fs};
 use std::io::{stdin, stdout, Write};
 use std::path::Path;
 use std::process::{Child, Command, Stdio};
+use users::{get_current_uid, get_user_by_uid};
 
 fn main() {
     let mut input = String::new();
+    let user = get_user_by_uid(get_current_uid()).unwrap();
+    let hostname = fs::read_to_string("/etc/hostname").unwrap();
+
 
     loop {
-        print!("$ ");
+        print!("{}@{} ~ ", user.name().to_string_lossy(), hostname);
         stdout().flush().ok();
 
         stdin().read_line(&mut input).unwrap();
@@ -23,8 +27,8 @@ fn main() {
                 "cd" => {
                     let new_dir = args.next().unwrap_or_else(|| "/");
                     let root = Path::new(new_dir);
-                    if let Err(e) = env::set_current_dir(&root) {
-                        eprintln!("{}", e);
+                    if let Err(_e) = env::set_current_dir(&root) {
+                        eprintln!("cd: no such file or directory: {}", new_dir);
                     }
 
                     previous_command = None;
