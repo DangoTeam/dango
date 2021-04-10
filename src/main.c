@@ -10,7 +10,7 @@
 #include <unistd.h>
 
 int dango_cd(char **args);
-int dango_help(char **args);
+int dango_self(char **args);
 int dango_exit(char **args);
 
 char* username;
@@ -19,14 +19,14 @@ char hostname[20];
 char *builtin_str[] = 
 {
 	"cd",
-	"help",
+	"dango",
 	"exit"
 };
 
 int (*builtin_func[]) (char **) = 
 {
 	&dango_cd,
-	&dango_help,
+	&dango_self,
 	&dango_exit
 };
 
@@ -42,6 +42,7 @@ int dango_cd(char **args)
 	  char* path = NULL;
 		int usernameLen = strlen(username);
 		path = malloc(6 + usernameLen + 1);
+		
 		strcpy(path, "/home/");
 		strcat(path, username);
 		chdir(path);
@@ -56,22 +57,30 @@ int dango_cd(char **args)
 	return 1;
 }
 
-int dango_help(char **args) 
+int dango_self(char **args) 
 {
-	printf("Dango!\n");
-	printf("Build in C, to everyone!\n");
+	if (args[1] == NULL) {
+		return 1;
+	}
 
-	int num_cmds = dango_num_builtins()-1;
-
-	for (int i = 0; i < num_cmds; i++) {
-		printf(" %s,", builtin_str[i]);
+	if (strcmp(args[1], "--version") == 0) {
+		printf("dango 0.0.2\n");
+		return 1;
 	}
 	
-	printf(" %s", builtin_str[num_cmds]);
+	if (strcmp(args[1], "--help") == 0) {
 
-	printf("\n");
+		int num_cmds = dango_num_builtins()-1;
 
-	return 1;
+		for (int i = 0; i < num_cmds; i++) {
+			printf(" %s,", builtin_str[i]);
+		}
+
+		printf(" %s", builtin_str[num_cmds]);
+		printf("\n");
+
+		return 1;
+	}
 }
 
 int dango_exit(char **args) 
@@ -125,7 +134,7 @@ char **dango_split_line(char *line)
 		token = strtok(NULL, DANGO_TOK_DELIM);
 	}
 
-	tokens[position]= NULL;
+	tokens[position] = NULL;
 	return tokens;
 }
 
@@ -174,9 +183,11 @@ void dango_loop(void)
 	char **args;
 	int status;
 
+	char cwd[30];
+
 	do
 	{
-		printf("%s@%s ~ ", username, hostname);
+		printf("[%s@%s]$ ", username, hostname);
 		line = dango_read_line();
 		args = dango_split_line(line);
 		status = dango_execute(args);
