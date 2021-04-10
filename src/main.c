@@ -13,6 +13,9 @@ int dango_cd(char **args);
 int dango_help(char **args);
 int dango_exit(char **args);
 
+char* username;
+char hostname[20];
+
 char *builtin_str[] = 
 {
 	"cd",
@@ -35,7 +38,15 @@ int dango_num_builtins()
 int dango_cd(char **args)
 {
 	if (args[1] == NULL) {
-		fprintf(stderr, "dango: expected argument to \"cd\"\n");
+		
+	  char* path = NULL;
+		int usernameLen = strlen(username);
+		path = malloc(6 + usernameLen + 1);
+		strcpy(path, "/home/");
+		strcat(path, username);
+		chdir(path);
+		free(path);
+
 	} else {
 		if (chdir(args[1]) != 0) {
 			perror("dango");
@@ -47,12 +58,18 @@ int dango_cd(char **args)
 
 int dango_help(char **args) 
 {
-	printf("É O VASCO!");
-	printf("DANGO TA DE VOLTA!!");
+	printf("Dango!\n");
+	printf("Build in C, to everyone!\n");
 
-	for (int i = 0; i < dango_num_builtins(); i++) {
-		printf("  %s\n", builtin_str[i]);
+	int num_cmds = dango_num_builtins()-1;
+
+	for (int i = 0; i < num_cmds; i++) {
+		printf(" %s,", builtin_str[i]);
 	}
+	
+	printf(" %s", builtin_str[num_cmds]);
+
+	printf("\n");
 
 	return 1;
 }
@@ -121,7 +138,7 @@ int dango_launch(char **args)
 
 	if (pid == 0) {
 		if (execvp(args[0], args) == -1) {
-			perror("dango");
+			fprintf(stderr, "dango: command not found: %s\n", args[0]);
 		}
 
 		exit(EXIT_FAILURE);
@@ -138,7 +155,7 @@ int dango_launch(char **args)
 
 int dango_execute(char **args)
 {
-	if (args[0] == NULL) {
+if (args[0] == NULL) {
 		return 1;
 	}
 
@@ -159,7 +176,7 @@ void dango_loop(void)
 
 	do
 	{
-		printf("> ");
+		printf("%s@%s ~ ", username, hostname);
 		line = dango_read_line();
 		args = dango_split_line(line);
 		status = dango_execute(args);
@@ -171,8 +188,11 @@ void dango_loop(void)
 
 int main(int argc, char **argv)
 {
+	username = getlogin();
+
+	gethostname(hostname, 20);
+
 	dango_loop();
 
 	return EXIT_SUCCESS;
 }
-

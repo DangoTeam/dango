@@ -3,9 +3,7 @@
   <h1 align="center">Dango</h1>
 </p>
 
-# Dango!
-
-A future shell created in C, quick and easy to be installed.  
+A future shell created in C, quick and easy to be installed.
 
 It will be updated, added new features and plugins, refactored and optimized.
 
@@ -13,9 +11,7 @@ It will be updated, added new features and plugins, refactored and optimized.
 
 ```git clone https://github.com/shaundeveloper/dango.git```
 
-
-
 # TODO:
 - [ ] Fix the Home and End keys.
 - [ ] The arrows work, and show the previous commands.
-- [ ] The user appears, and the current directory.
+- [x] The user appears, and the current directory.
