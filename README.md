@@ -11,6 +11,10 @@ It will be updated, added new features and plugins, refactored and optimized.
 
 ```git clone https://github.com/shaundeveloper/dango.git```
 
+```make```
+
+```./dango```
+
 # TODO:
 - [ ] Fix the Home and End keys.
 - [ ] The arrows work, and show the previous commands.
