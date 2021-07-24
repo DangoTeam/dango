@@ -3,53 +3,54 @@
 #define DANGO_TOK_BUFSIZE 64
 #define DANGO_TOK_DELIM " \t\r\n\a"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <iostream>
 
 int dango_cd(char **args);
 int dango_self(char **args);
 int dango_exit(char **args);
 
-char* username;
+char *username;
 char hostname[20];
 
-char *builtin_str[] = 
-{
-	"cd",
-	"dango",
-	"exit"
-};
+char *builtin_str[] =
+	{
+		"cd",
+		"dango",
+		"exit"};
 
-int (*builtin_func[]) (char **) = 
-{
-	&dango_cd,
-	&dango_self,
-	&dango_exit
-};
+int (*builtin_func[])(char **) =
+	{
+		&dango_cd,
+		&dango_self,
+		&dango_exit};
 
-int dango_num_builtins() 
+int dango_num_builtins()
 {
 	return sizeof(builtin_str) / sizeof(char *);
 }
 
 int dango_cd(char **args)
 {
-	if (args[1] == NULL) {
-		
-	  char* path = NULL;
+	if (args[1] == NULL)
+	{
+
+		char *path = NULL;
 		int usernameLen = strlen(username);
-		path = malloc(6 + usernameLen + 1);
-		
+		path = (char *)malloc(6 + usernameLen + 1);
+
 		strcpy(path, "/home/");
 		strcat(path, username);
 		chdir(path);
 		free(path);
-
-	} else {
-		if (chdir(args[1]) != 0) {
+	}
+	else
+	{
+		if (chdir(args[1]) != 0)
+		{
 			perror("dango");
 		}
 	}
@@ -57,33 +58,37 @@ int dango_cd(char **args)
 	return 1;
 }
 
-int dango_self(char **args) 
+int dango_self(char **args)
 {
-	if (args[1] == NULL) {
+	if (args[1] == NULL)
+	{
 		return 1;
 	}
 
-	if (strcmp(args[1], "--version") == 0) {
-		printf("dango 0.0.2\n");
+	if (strcmp(args[1], "--version") == 0)
+	{
+		std::cout << "dango 0.0.2" << std::endl;
 		return 1;
 	}
-	
-	if (strcmp(args[1], "--help") == 0) {
 
-		int num_cmds = dango_num_builtins()-1;
+	if (strcmp(args[1], "--help") == 0)
+	{
 
-		for (int i = 0; i < num_cmds; i++) {
-			printf(" %s,", builtin_str[i]);
+		int num_cmds = dango_num_builtins() - 1;
+
+		for (int i = 0; i < num_cmds; i++)
+		{
+			std::cout << " " << builtin_str[i];
 		}
 
-		printf(" %s", builtin_str[num_cmds]);
+		std::cout << " " << builtin_str[num_cmds];
 		printf("\n");
 
 		return 1;
 	}
 }
 
-int dango_exit(char **args) 
+int dango_exit(char **args)
 {
 	return 0;
 }
@@ -91,12 +96,16 @@ int dango_exit(char **args)
 char *dango_read_line(void)
 {
 	char *line = NULL;
-	ssize_t bufsize = 0;
+	size_t bufsize = 0;
 
-	if (getline(&line, &bufsize, stdin) == -1) {
-		if (feof(stdin)) {
+	if (getline(&line, &bufsize, stdin) == -1)
+	{
+		if (feof(stdin))
+		{
 			exit(EXIT_SUCCESS);
-		} else {
+		}
+		else
+		{
 			perror("readline");
 			exit(EXIT_FAILURE);
 		}
@@ -108,24 +117,28 @@ char *dango_read_line(void)
 char **dango_split_line(char *line)
 {
 	int bufsize = DANGO_TOK_BUFSIZE, position = 0;
-	char **tokens = (char**)malloc(bufsize * sizeof(char*));
+	char **tokens = (char **)malloc(bufsize * sizeof(char *));
 	char *token, **tokens_backup;
 
-	if (!tokens) {
+	if (!tokens)
+	{
 		fprintf(stderr, "dango: allocation error\n");
 		exit(EXIT_FAILURE);
 	}
 
 	token = strtok(line, DANGO_TOK_DELIM);
-	while (token != NULL) {
+	while (token != NULL)
+	{
 		tokens[position] = token;
 		position++;
 
-		if (position >= bufsize) {
+		if (position >= bufsize)
+		{
 			bufsize += DANGO_TOK_BUFSIZE;
 			tokens_backup = tokens;
-			tokens = realloc(tokens, bufsize * sizeof(char*));
-			if (!tokens) {
+			tokens = (char **)realloc(tokens, bufsize * sizeof(char *));
+			if (!tokens)
+			{
 				fprintf(stderr, "dango: allocation error\n");
 				exit(EXIT_FAILURE);
 			}
@@ -145,16 +158,23 @@ int dango_launch(char **args)
 
 	pid = fork();
 
-	if (pid == 0) {
-		if (execvp(args[0], args) == -1) {
+	if (pid == 0)
+	{
+		if (execvp(args[0], args) == -1)
+		{
 			fprintf(stderr, "dango: command not found: %s\n", args[0]);
 		}
 
 		exit(EXIT_FAILURE);
-	} else if (pid < 0) {
+	}
+	else if (pid < 0)
+	{
 		perror("dango");
-	} else {
-		do {
+	}
+	else
+	{
+		do
+		{
 			waitpid(pid, &status, WUNTRACED);
 		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
 	}
@@ -164,12 +184,15 @@ int dango_launch(char **args)
 
 int dango_execute(char **args)
 {
-if (args[0] == NULL) {
+	if (args[0] == NULL)
+	{
 		return 1;
 	}
 
-	for (int i = 0; i < dango_num_builtins(); i++) {
-		if (strcmp(args[0], builtin_str[i]) == 0) {
+	for (int i = 0; i < dango_num_builtins(); i++)
+	{
+		if (strcmp(args[0], builtin_str[i]) == 0)
+		{
 			return (*builtin_func[i])(args);
 		}
 	}
@@ -187,7 +210,7 @@ void dango_loop(void)
 
 	do
 	{
-		printf("[%s@%s]$ ", username, hostname);
+		printf("\u001b[38;5;82m%s\u001b[0m ~> ", username, hostname);
 		line = dango_read_line();
 		args = dango_split_line(line);
 		status = dango_execute(args);
