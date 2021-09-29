@@ -7,7 +7,7 @@ SRC=src/*.cpp
 PREFIX = /usr/local
 
 dango: $(SRC)
-	$(CC) -o $(NAME) $(SRC) ${DEBUG_FLAGS} 
+	$(CC) -o $(NAME) $(SRC) $(DEBUG_FLAGS) 
 
 install: dango
 	mkdir -p ${DESTDIR}${PREFIX}/bin
