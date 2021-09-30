@@ -3,7 +3,7 @@
   <h1 align="center">Dango</h1>
 </p>
 
-A future shell created in C, quick and easy to be installed.
+A future shell created in C++, quick and easy to be installed.
 
 It will be updated, added new features and plugins, refactored and optimized.
 
