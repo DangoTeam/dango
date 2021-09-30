@@ -1,7 +1,7 @@
 # My first makefile
 
 NAME=dango
-CC=gcc
+CC=g++
 DEBUG_FLAGS= -g -fsanitize=address
 SRC=src/*.cpp
 PREFIX = /usr/local
